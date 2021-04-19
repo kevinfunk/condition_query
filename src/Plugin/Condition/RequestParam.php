@@ -5,8 +5,8 @@ namespace Drupal\condition_query\Plugin\Condition;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,7 +23,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
   /**
    * An alias manager to find the alias for the current system path.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -37,7 +37,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
   /**
    * Constructs a RequestPath condition plugin.
    *
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   An alias manager to find the alias for the current system path.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
@@ -59,7 +59,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('path.alias_manager'),
+      $container->get('path_alias.manager'),
       $container->get('request_stack'),
       $configuration,
       $plugin_id,
