@@ -32,6 +32,14 @@ Example usage:
    ( http:://www.example.com/?visibility=show )
 2) Hide all blocks if query parameter has "app=true"
    ( http:://www.example.com/?app=true)
+3) Display blocks if query parameter has "page=*" (all pages)
+   ( http:://www.example.com/?page=0 )
+   ( http:://www.example.com/?page=1 )
+   ( http:://www.example.com/?page=2 )
+4) Display blocks if query parameter has "page=*\0,1,2" (all pages but the first three)
+   ( http:://www.example.com/?page=3 )
+   ( http:://www.example.com/?page=4 )
+   ( http:://www.example.com/?page=5 )
 
 
 REQUIREMENTS
