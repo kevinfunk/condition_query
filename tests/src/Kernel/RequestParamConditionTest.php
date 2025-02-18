@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\condition_query\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -64,7 +66,7 @@ class RequestParamConditionTest extends KernelTestBase {
    *   The expected return value from the evaluate() method.
    */
   public function testEvaluate(string $request_path, array $config, bool $expected) : void {
-    /* @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
+    /** @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
     $condition = $this->pluginManager->createInstance('request_param');
     foreach ($config as $key => $value) {
       $condition->setConfig($key, $value);
@@ -147,7 +149,7 @@ class RequestParamConditionTest extends KernelTestBase {
    *   The expected summary.
    */
   public function testSummary(array $config, string $expected) : void {
-    /* @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
+    /** @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
     $condition = $this->pluginManager->createInstance('request_param');
     foreach ($config as $key => $value) {
       $condition->setConfig($key, $value);
