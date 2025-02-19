@@ -50,8 +50,7 @@ class RequestParamConditionTest extends KernelTestBase {
     $this->pluginManager = $this->container->get('plugin.manager.condition');
 
     // Set the test request stack in the container.
-    $this->requestStack = new RequestStack();
-    $this->container->set('request_stack', $this->requestStack);
+    $this->requestStack = \Drupal::requestStack();
   }
 
   /**
