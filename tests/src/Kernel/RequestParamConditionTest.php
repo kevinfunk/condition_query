@@ -6,7 +6,8 @@ namespace Drupal\Tests\condition_query\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests that the Request Param Condition is working properly.
@@ -43,13 +44,14 @@ class RequestParamConditionTest extends KernelTestBase {
   protected function setUp() : void {
     parent::setUp();
 
-    $this->installSchema('system', ['sequences']);
+    if (version_compare(\Drupal::VERSION, '10.2.0', '<')) {
+      $this->installSchema('system', ['sequences']);
+    }
 
     $this->pluginManager = $this->container->get('plugin.manager.condition');
 
     // Set the test request stack in the container.
-    $this->requestStack = new RequestStack();
-    $this->container->set('request_stack', $this->requestStack);
+    $this->requestStack = \Drupal::requestStack();
   }
 
   /**
@@ -72,6 +74,7 @@ class RequestParamConditionTest extends KernelTestBase {
       $condition->setConfig($key, $value);
     }
     $request = Request::create($request_path);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->requestStack->push($request);
     $this->assertEquals($expected, $condition->execute());
     $this->requestStack->pop();
