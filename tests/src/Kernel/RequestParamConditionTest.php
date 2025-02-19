@@ -78,6 +78,7 @@ class RequestParamConditionTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->requestStack->push($request);
     $this->assertEquals($expected, $condition->execute());
+    $this->requestStack->pop();
   }
 
   /**
