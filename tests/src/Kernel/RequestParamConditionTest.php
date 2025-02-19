@@ -45,7 +45,9 @@ class RequestParamConditionTest extends KernelTestBase {
   protected function setUp() : void {
     parent::setUp();
 
-    $this->installSchema('system', ['sequences']);
+    if (version_compare(\Drupal::VERSION, '10.2.0', '<')) {
+      $this->installSchema('system', ['sequences']);
+    }
 
     $this->pluginManager = $this->container->get('plugin.manager.condition');
 
