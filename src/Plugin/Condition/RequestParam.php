@@ -73,6 +73,11 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
         '%example_2' => 'visibility[]=show',
       ]),
     ];
+    $form['request_and'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('AND the condition'),
+      '#default_value' => $this->configuration['request_and'],
+    ];
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -81,6 +86,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['request_param'] = $form_state->getValue('request_param');
+    $this->configuration['request_and'] = $form_state->getValue('request_and');
     parent::submitConfigurationForm($form, $form_state);
   }
 
@@ -102,6 +108,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
   public function evaluate() {
     // Convert params to lowercase.
     $params = mb_strtolower($this->configuration['request_param']);
+    $and = $this->configuration['request_and'];
     if (!$params) {
       return TRUE;
     }
@@ -109,23 +116,38 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
     $request = $this->requestStack->getCurrentRequest();
     parse_str(preg_replace('/\n|\r\n?/', '&', $params), $request_params);
     if (!empty($request_params)) {
-      foreach ($request_params as $key => $values) {
-        if (!is_array($values)) {
-          $values = [$values];
+      if ($and) {
+        $all_queries = $request->query->all();
+        $evaluate = array_intersect_assoc($all_queries, $request_params);
+        if ($evaluate == $request_params) {
+          return TRUE;
         }
-        $query_param_value = $request->get($key);
-        if (!isset($query_param_value)) {
-          continue;
+        else {
+          return FALSE;
         }
-        if (is_array($query_param_value)) {
-          foreach ($query_param_value as $array_value) {
-            if (in_array($array_value, $values)) {
+      }
+      else {
+        foreach ($request_params as $key => $values) {
+          if (!is_array($values)) {
+            $values = [$values];
+          }
+          $query_param_value = $request->get($key);
+          if (!isset($query_param_value)) {
+            continue;
+          }
+          if (is_array($query_param_value)) {
+            foreach ($query_param_value as $array_value) {
+              if (in_array($array_value, $values)) {
+                return TRUE;
+              }
+            }
+          }
+          else {
+            $query_param_value = mb_strtolower($query_param_value);
+            if (in_array($query_param_value, $values)) {
               return TRUE;
             }
           }
-        }
-        elseif (in_array($query_param_value, $values)) {
-          return TRUE;
         }
       }
     }
