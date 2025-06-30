@@ -1,0 +1,12 @@
+{
+  "name": "drupal/condition_query",
+  "type": "drupal-module",
+  "keywords": ["Drupal"],
+  "homepage": "https://www.drupal.org/project/condition_query",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/condition_query",
+    "source": "http://cgit.drupalcode.org/condition_query"
+  },
+  "require": { }
+}
